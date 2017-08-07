@@ -1,31 +1,21 @@
 package com.joaoibarra.ibarramaps.maps.presenter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
 import com.joaoibarra.ibarramaps.maps.contract.MapContract;
 import com.joaoibarra.ibarramaps.maps.model.Action;
 import com.joaoibarra.ibarramaps.maps.model.Favorite;
 import com.joaoibarra.ibarramaps.maps.model.FavoriteResponse;
 import com.joaoibarra.ibarramaps.maps.model.MapService;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by joaoibarra on 29/07/17.
@@ -36,6 +26,7 @@ public class MapPresenter implements MapContract.MapPresenterContract<MapContrac
 
     SearchInteractor searchInteractor;
     PermissionInteractor permissionInteractor;
+    DatabaseInteractor databaseInteractor;
 
     @Override
     public void attach(final MapContract.MapViewContract view) {
@@ -43,6 +34,8 @@ public class MapPresenter implements MapContract.MapPresenterContract<MapContrac
         mapView.setMap();
         searchInteractor = new SearchInteractor();
         permissionInteractor = new PermissionInteractor();
+        databaseInteractor = new DatabaseInteractor();
+
     }
 
     @Override
@@ -54,20 +47,16 @@ public class MapPresenter implements MapContract.MapPresenterContract<MapContrac
     public void getFavoriteMarkers(){
         MapService mapService = new MapService();
         Call<FavoriteResponse> call = mapService.getFavorites();
-        call.enqueue(new Callback<FavoriteResponse>() {
-            @Override
-            public void onResponse(Call<FavoriteResponse> call, Response<FavoriteResponse> response) {
-                Log.i("LOLZIN", "É nóis");
-                FavoriteResponse favoriteResponse = response.body();
-                for(int i = 0; i < favoriteResponse.getFavorites().size(); i++ )
-                    mapView.createMarker(favoriteResponse.getFavorites().get(i));
-            }
 
-            @Override
-            public void onFailure(Call<FavoriteResponse> call, Throwable t) {
-                Log.i("LOLZIN", "Não é nóis");
-            }
-        });
+        List<Favorite> favorites = databaseInteractor.db.favoriteDao().getAll();
+        if(favorites.size() <= 0){
+            getFavoriteMarkers(call);
+        }else{
+            /*for(int i = 0; i < favorites.size(); i++ ) {
+                mapView.createMarker(favorites.get(i));
+            }*/
+        }
+
     }
 
     @Override
@@ -92,10 +81,49 @@ public class MapPresenter implements MapContract.MapPresenterContract<MapContrac
         searchInteractor.placePickerSearch(_activity);
     }
 
+    @Override
     public void clickMenu(boolean isOpenMenu){
         if(isOpenMenu)
             mapView.closeMenu();
         else
             mapView.showMenu();
+    }
+
+    public void getFavoriteMarkers(Call call){
+        call.enqueue(new Callback<FavoriteResponse>() {
+            @Override
+            public void onResponse(Call<FavoriteResponse> call, Response<FavoriteResponse> response) {
+                Log.i("LOLZIN", "É nóis");
+                FavoriteResponse favoriteResponse = response.body();
+                for(int i = 0; i < favoriteResponse.getFavorites().size(); i++ ) {
+                    //mapView.createMarker(favoriteResponse.getFavorites().get(i));
+                    databaseInteractor.getDb().favoriteDao().insert(favoriteResponse.getFavorites().get(i));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FavoriteResponse> call, Throwable t) {
+                Log.i("LOLZIN", "Não é nóis");
+            }
+        });
+    }
+
+    @Override
+    public void startDb(Activity _activity){
+        databaseInteractor.open(_activity);
+    }
+
+    @Override
+    public void addFavorite(double latitude, double longitude){
+        Favorite favorite = new Favorite("Novo", latitude, longitude);
+        mapView.createMarker(favorite);
+        databaseInteractor.getDb().favoriteDao().insert(favorite);
+    }
+
+    @Override
+    public void getAllFavorites(){
+        List<Favorite> favorites = databaseInteractor.getDb().favoriteDao().getAll();
+        for(int i = 0; i < favorites.size(); i++)
+            mapView.createMarker(favorites.get(i));
     }
 }

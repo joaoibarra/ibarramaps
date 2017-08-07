@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.joaoibarra.ibarramaps.base.BasePresenter;
 import com.joaoibarra.ibarramaps.maps.model.Action;
@@ -22,7 +23,6 @@ public interface MapContract {
         void createMarker(Favorite favorite);
         void showMenu();
         void closeMenu();
-        /*void getDeviceLocation(GoogleMap googleMap, GoogleApiClient googleApiClient);*/
     }
 
     interface GoogleApiClientContract{
@@ -37,6 +37,10 @@ public interface MapContract {
         boolean onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults);
+        void clickMenu(boolean isOpenMenu);
+        void startDb(Activity _activity);
+        void addFavorite(double latitude, double longitude);
+        void getAllFavorites();
     }
 
     interface SearchInteractorContract{
@@ -52,5 +56,9 @@ public interface MapContract {
                                            @NonNull int[] grantResults,
                                            Action action);
 
+    }
+
+    interface DatabaseInteractorContract{
+        void open(Activity _activity);
     }
 }

@@ -1,6 +1,7 @@
 package com.joaoibarra.ibarramaps.maps.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -11,9 +12,9 @@ import com.google.gson.annotations.SerializedName;
  */
 
 
-@Entity
+@Entity(tableName = "favorite")
 public class Favorite {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int fid;
 
     @SerializedName("name")

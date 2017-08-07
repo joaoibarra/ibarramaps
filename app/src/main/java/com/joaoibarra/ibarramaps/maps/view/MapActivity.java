@@ -1,5 +1,6 @@
 package com.joaoibarra.ibarramaps.maps.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -59,6 +62,7 @@ public class MapActivity extends AppCompatActivity
     private boolean isOpenMenu = false;
 
     private static final int DEFAULT_ZOOM = 17;
+    private static final int FAVORITES_ZOOM = 11;
 
     public static final int REQUEST_CODE_AUTOCOMPLETE = 1;
 
@@ -79,6 +83,7 @@ public class MapActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         mapPresenter = new MapPresenter();
         mapPresenter.attach(this);
+        mapPresenter.startDb(this);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
 
@@ -290,9 +295,16 @@ public class MapActivity extends AppCompatActivity
 
     @OnClick(R.id.fab_menu_favorite)
     public void menuFavorite(){
+        mapPresenter.addFavorite(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
     }
 
     @OnClick(R.id.fab_menu_favorites)
     public void menuFavorites(){
+        mapPresenter.getAllFavorites();
+        if (lastKnownLocation != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(lastKnownLocation.getLatitude(),
+                            lastKnownLocation.getLongitude()), FAVORITES_ZOOM));
+        }
     }
 }
