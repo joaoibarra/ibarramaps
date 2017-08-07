@@ -1,0 +1,66 @@
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.joaoibarra.ibarramaps.maps.view.MapActivity"
+        android:layout_marginTop="0dp"
+        map:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="0dp"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="0dp"
+        map:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="0dp" /><!--
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_menu_favorite"
+        android:layout_width="@dimen/fab_menu_size"
+        android:layout_height="@dimen/fab_menu_size"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_btn_speak_now"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"  />-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_menu_favorites"
+        android:layout_width="@dimen/fab_menu_size"
+        android:layout_height="@dimen/fab_menu_size"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/fab_menu_item_margin"
+        android:layout_marginRight="@dimen/fab_menu_item_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_menu_favorite"
+        android:layout_width="@dimen/fab_menu_size"
+        android:layout_height="@dimen/fab_menu_size"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/fab_menu_item_margin"
+        android:layout_marginRight="@dimen/fab_menu_item_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"  />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@android:drawable/ic_dialog_email"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</android.support.constraint.ConstraintLayout>
